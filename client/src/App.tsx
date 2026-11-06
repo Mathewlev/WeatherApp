@@ -1,9 +1,5 @@
+import Home from "./Home";
+
 export default function App() {
-
-
-  return (
-    <main>
-      <h1>Weather App</h1>
-    </main>
-  );
+  return <Home></Home>;
 }
