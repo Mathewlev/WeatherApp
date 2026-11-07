@@ -30,4 +30,9 @@
   border: none;
   border-radius: 6px;
   font-size: 24px;
+  cursor: pointer;
+}
+
+.add-city-button:disabled {
+  opacity: 0.3;
 }

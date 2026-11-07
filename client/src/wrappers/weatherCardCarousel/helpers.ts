@@ -1,36 +1,19 @@
-import { WeatherCardProps } from "../../../library/weatherCard/types";
-import { WeatherLocation } from "./locations";
+import { WeatherData } from "../../../library/weatherCard/types";
+import { Coordinates } from "./locations";
 
-// need this for the key
-export interface WeatherCardData extends WeatherCardProps {
-  lat: number;
-  lon: number;
-}
-
-async function fetchWeather({
-  name,
+export async function fetchWeather({
   lat,
   lon,
-}: WeatherLocation): Promise<WeatherCardData> {
+}: Coordinates): Promise<WeatherData> {
   const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
 
   if (!response.ok) {
     throw new Error("Weather request failed");
   }
 
-  const weather = (await response.json()) as WeatherCardProps;
-
-  return { ...weather, cityName: name, lat, lon };
+  return (await response.json()) as WeatherData;
 }
 
-export async function fetchWeatherCards(
-  locations: WeatherLocation[],
-): Promise<WeatherCardData[]> {
-  const results = await Promise.allSettled(
-    locations.map((location) => fetchWeather(location)),
-  );
-
-  return results
-    .filter((result) => result.status === "fulfilled")
-    .map((result) => result.value);
+export function getLocationKey({ lat, lon }: Coordinates) {
+  return `${lat},${lon}`;
 }
