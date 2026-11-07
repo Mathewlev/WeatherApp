@@ -1,0 +1,17 @@
+.weather-card-carousel {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.weather-card-carousel-item {
+  flex-basis: 300px;
+  min-width: 260px;
+}
+
+.weather-card-carousel-status {
+  padding: 16px;
+  text-align: center;
+  font-family: system-ui;
+}

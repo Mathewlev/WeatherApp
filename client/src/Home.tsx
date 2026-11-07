@@ -1,6 +1,8 @@
 import { Header } from "../library/header/header";
 import { Icon } from "../library/icon/icon";
 import SunSmile from "../library/svgs/sun_smile.svg?react";
+import { LOCATIONS } from "./wrappers/weatherCardCarousel/locations";
+import { WeatherCardCarousel } from "./wrappers/weatherCardCarousel/weatherCardCarousel";
 import "./Home.css";
 
 export default function Home() {
@@ -11,6 +13,7 @@ export default function Home() {
           <Header text={"Weather Today"} level={1}></Header>
           <Icon icon={SunSmile} size="xl" />
         </div>
+        <WeatherCardCarousel locations={LOCATIONS} />
       </div>
     </main>
   );
