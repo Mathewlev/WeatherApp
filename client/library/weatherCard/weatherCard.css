@@ -11,6 +11,22 @@
   font-family: system-ui;
 }
 
+.weather-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.weather-card-remove {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 .weather-card-city {
   margin-bottom: 4px;
   margin-top: -4px;

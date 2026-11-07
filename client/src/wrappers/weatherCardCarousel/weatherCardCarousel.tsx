@@ -1,53 +1,57 @@
-import { useEffect, useState } from "react";
-import { WeatherCard } from "../../../library/weatherCard/weatherCard";
-import { fetchWeatherCards, WeatherCardData } from "./helpers";
-import { WeatherLocation } from "./locations";
+import { useMemo } from "react";
+import { useWeather } from "../../hooks/useWeather";
+import { getLocationKey } from "./helpers";
+import { LocationWeatherCard } from "./locationWeatherCard";
+import { Coordinates, WeatherLocation } from "./locations";
 import "./weatherCardCarousel.css";
 
 interface WeatherCardCarouselProps {
-  locations: WeatherLocation[];
+  currentLocation: Coordinates | null;
+  isLocating: boolean;
+  savedCities: WeatherLocation[];
+  onRemoveCity: (cityName: string) => void;
 }
 
-export function WeatherCardCarousel({ locations }: WeatherCardCarouselProps) {
-  const [weatherCards, setWeatherCards] = useState<WeatherCardData[] | null>(
-    null,
-  );
+export function WeatherCardCarousel({
+  currentLocation,
+  isLocating,
+  savedCities,
+  onRemoveCity,
+}: WeatherCardCarouselProps) {
+  // Nothing is fetched until the user location is known, so all the cards load together.
+  // If user has location blocked, they can still add other cites.
+  const locationsToLoad = useMemo(() => {
+    if (isLocating) return [];
 
-  useEffect(() => {
-    let ignore = false;
+    return currentLocation ? [currentLocation, ...savedCities] : savedCities;
+  }, [currentLocation, isLocating, savedCities]);
 
-    fetchWeatherCards(locations).then((cards) => {
-      if (!ignore) setWeatherCards(cards);
-    });
+  const weatherByLocation = useWeather(locationsToLoad);
+  const isFirstLoad =
+    locationsToLoad.length > 0 && Object.keys(weatherByLocation).length === 0;
 
-    return () => {
-      ignore = true;
-    };
-  }, [locations]);
-
-  if (!weatherCards) {
+  if (isLocating || isFirstLoad) {
     return <div className="weather-card-carousel-status">Loading...</div>;
   }
 
-  const failedCount = locations.length - weatherCards.length;
-
   return (
-    <div>
-      {failedCount > 0 && (
-        <div className="weather-card-carousel-status">
-          Could not load {failedCount} of {locations.length} cities
+    <div className="weather-card-carousel">
+      {currentLocation && (
+        <div className="weather-card-carousel-item">
+          <LocationWeatherCard
+            weather={weatherByLocation[getLocationKey(currentLocation)]}
+          />
         </div>
       )}
-      <div className="weather-card-carousel">
-        {weatherCards.map((card) => (
-          <div
-            className="weather-card-carousel-item"
-            key={`${card.lat} ${card.cityName} ${card.lon}`}
-          >
-            <WeatherCard {...card} />
-          </div>
-        ))}
-      </div>
+      {savedCities.map((city) => (
+        <div className="weather-card-carousel-item" key={city.name}>
+          <LocationWeatherCard
+            weather={weatherByLocation[getLocationKey(city)]}
+            name={city.name}
+            onRemove={() => onRemoveCity(city.name)}
+          />
+        </div>
+      ))}
     </div>
   );
 }

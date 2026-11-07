@@ -1,4 +1,4 @@
-export interface WeatherCardProps {
+export interface WeatherData {
   cityName: string;
   temperature: number;
   feelsLike: number;
@@ -8,4 +8,8 @@ export interface WeatherCardProps {
   icon: string;
   humidity: number;
   windSpeed: number;
+}
+
+export interface WeatherCardProps extends WeatherData {
+  onRemove?: () => void;
 }

@@ -13,6 +13,7 @@ export function WeatherCard({
   icon,
   humidity,
   windSpeed,
+  onRemove,
 }: WeatherCardProps) {
   const labelStyle = { color: Colors.textGray };
 
@@ -21,7 +22,20 @@ export function WeatherCard({
       className="weather-card-container"
       style={{ borderColor: Colors.borderGray }}
     >
-      <Header text={cityName} className="weather-card-city" />
+      <div className="weather-card-header">
+        <Header text={cityName} className="weather-card-city" />
+        {onRemove && (
+          <button
+            type="button"
+            className="weather-card-remove"
+            aria-label={`Remove ${cityName}`}
+            onClick={onRemove}
+            style={{ backgroundColor: Colors.dangerRed, color: Colors.white }}
+          >
+            -
+          </button>
+        )}
+      </div>
       <div className="weather-card-general">
         <img src={icon} width={72} height={72} />
         <div>
